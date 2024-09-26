@@ -23,6 +23,39 @@ When code is likely to be re-used (e.g. not a one-off analysis), create a commen
 
 When working across multiple projects, it can be helpful if each project has a similar file structure. Ty and Collin will discuss what that should be, but good foundation is Ty's approach, which has a `data/` and a `scripts/` subfolder. It may be helpful to also include a standardized readme with basic information (when project was started, what goal was, who was working on it). When Collin was working in an academic setting, he had a [code snippet](https://gist.github.com/cbedwards/7e64215e062c42da54dbd01626ef6a72) that he ran whenever starting a new project, which created his standardized folder structure and auto-populated a few key template files. We could think about writing something similar.
 
+
+Draft file structure?
+```
+project_folder
+├── scripts
+│   ├── data_clean.R
+│   └── analysis.R
+├── data
+│   ├── data.csv
+│   └── more_data.xlsx
+├── figures
+├── results
+│   └── some_figure.png
+├── .gitignore
+└── project_folder.Rproj
+```
+
+#### Databases
+Security around database connections is an important concern. Under no circumstance
+should any of the following be shared in a script or data:
+
+-   Database login information like usernames or passwords
+-   Database server locations like IP addressed or domain names
+
+Ideally, database connections should be stored locally as an ODBC connection and 
+referenced in within the script as a DSN.
+
+```r
+con <- DBI::dbConnect(dsn='<dsn_name>')
+```
+
+
+
 #### Tips
 
 -   We have a [template YAML header](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/custom-yaml-header.Rmd) for quarto / rmarkdown files that includes some useful settings for readability, and gives a WDFW flavored header when combined with [this style guide](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/style.css).
