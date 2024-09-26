@@ -28,6 +28,10 @@ When working across multiple projects, it can be helpful if each project has a s
 -   We have a [template YAML header](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/custom-yaml-header.Rmd) for quarto / rmarkdown files that includes some useful settings for readability, and gives a WDFW flavored header when combined with [this style guide](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/style.css).
 -   using `if(interactive())` allows you to write code that behaves differently when being compiled for a report than when its being run interactively. This can be useful when developing parameterized reports.
 
+## R Practices
+
+- Ensure that your code is reproducible by never saving / loading the environment. Scripts should include code to read in relevant files, and can save key objects for re-use later. In Rstudio, go to `Tools > Global Options` and in the `General` section, make sure that "Restore .Rdata into workspace on startup" is NOT checked, and make sure that "Save worskpace to .Rdata on exit:" dropdown is set to "Never"
+
 ## Style guide
 
 (Ty's plan, Collin has regrets)
@@ -47,6 +51,7 @@ We often need to create graphics to show aspects of the data. There is no one-si
     -   The `colorBlindness` [package](https://cran.r-project.org/web/packages/colorBlindness/vignettes/colorBlindness.html) has the hugely useful `cvdPlot` function, which will display a ggplot2 object under different simulated color vision deficiencies to help check accessibility.
 -   Text size should be large enough to read comfortably. When using ggplot, this can easily be achieved by using any of the built-in themes and including the optional argument `base_size`. A good starting point is `theme_bw(base_size = 16)`.
 -   When there is complexity in interpreting a plot, this should be included in text associated with the plot. This is easy to do in Quarto or Rmarkdown, as we can add caveates or comments right below or above the associated R chunk. In quarto reports, an explicit figure caption can be added with `#| fig-cap: "caption contents go here"`.
+-  Sometimes we work with timeseries data using day of year as a numeric (e.g., converting dates to values from 1 to 365). Plotting results on a doy scale makes them difficult to interpret; instead, we can use the [doy_2md() function here](https://github.com/FRAMverse/snippets/blob/main/R/doy_2md.R) to translate back. In it's simplest form, using this function just requires including a `scale_x_continuous(labels = doy_2md)` call in your ggplot layers.
 
 ## Version control
 
