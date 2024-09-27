@@ -364,6 +364,30 @@ reproducible and approachable.</p>
 </div>
 <div id="general-practices" class="section level2">
 <h2>General practices</h2>
+<!-- Todo:
+ - CBE: read other R best practices docs, adapt parts that make sense to us.
+ - Populate / link directions on some of the suggestions (e.g., git, renv, etc)
+-->
+</div>
+</div>
+<div id="best-practices" class="section level1">
+<h1>Best practices</h1>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Good coding practices make collaboration easier and faster, and
+reduce the frequency and consequences of bugs and problems. At least
+initially, adhering to good practices can feel like it add unnecessary
+steps that slow progress. In the long run, however, we find that these
+practices save time. Further, they increase the transparency of our
+code, which in turn increases the overall transparency of our work.</p>
+<p>Below, we outline best practices organized into related topics. When
+it can be done succinctly, we provide explanations for <em>why</em> the
+practices save time. After the guidelines, we include some short
+tutorials and examples to show <em>how</em> to implement some of the
+less obvious practices.</p>
+</div>
+<div id="project-management" class="section level2">
+<h2>Project management</h2>
 <p>For any kind of substantial work involving more than one file, use
 Rprojects, the <code>here</code> package, and <code>renv</code> to make
 scripts easily shareable. The goal is that you can zip up a folder, send
@@ -372,27 +396,34 @@ changes.</p>
 <p>When developing a document to report results or findings to a general
 user, use Rmarkdown or Quarto to create a report that blends R code with
 explanations and graphics.</p>
-<p>When code is likely to be re-used (e.g. not a one-off analysis),
+<p>When a script is likely to be re-used (e.g. not a one-off analysis),
 create a commented version with instructions on use. This should be
-stored somewhere accessible. Collin maintains the <code>snippets</code>
-<a href="https://github.com/FRAMverse/snippets">github repository</a>
-for this kind of thing, or it could live in a Teams folder. It may also
-be appropriate to incorporate this code into an R package, or develop a
-new R package for this code. Converting code to packages is much more
-involved that storing a code snippet somewhere, but makes it much easier
-for incorporation into other code.</p>
-<div id="using-fundamental-tools" class="section level4">
-<h4>Using fundamental tools</h4>
-<p><em>Need to give directions for starting Rprojects, using the here
-package, using <code>renv</code></em></p>
-<ul>
-<li>Code that is meant to be shared should not include a hard-coded
-setwd() or file paths based on the local machine directory structure.
-Function calls that require file paths should be relative, such that
-someone with a copy of the project directory can run the script without
-needing to change those file paths.</li>
-</ul>
-</div>
+stored somewhere accessible. Collin Edwards maintains the
+<code>snippets</code> <a href="https://github.com/FRAMverse/snippets">github repository</a> for
+this kind of thing, or it could live in a Teams folder. If code is
+likely to be useful to the team or others, it may also be appropriate to
+incorporate this code into an R package, or develop a new R package for
+this code. Converting code to packages is much more involved that
+storing a code snippet or re-useable script somewhere, but makes it much
+easier for incorporation into other code.</p>
+<p>To make scripts easier to re-use, replace hard-coded specifics with
+variables that are defined at the top of the script. For example, if
+Collin wrote a script to read in the Mortalities table of a FRAM
+database and plot the landed catch for a specific fishery, he would
+probably initially write that script using the file name and fishery
+name wherever he needed it (e.g.,
+<code>connect_fram_db(&quot;FramDBExample.Mdb&quot;)</code> and
+<code>data |&gt; select(fishery_id == 19) |&gt; ...</code>). To make
+this script easier to re-use, he could add lines of code near the top of
+the script, with</p>
+<pre class="r"><code>file_use = &quot;FramDBExample.Mdb&quot;
+fishery_use = 19</code></pre>
+<p>and then replace any hard-coded uses of the filename and fishery ID
+with those variables (e.g., <code>connect_fram_db(file_use)</code> and
+<code>data |&gt; select(fishery_id == fishery_use) |&gt; ...</code>).
+This makes it very easy to re-use for a different case – simply update
+the lines defining <code>file_use</code> and
+<code>fishery_use</code>.</p>
 <div id="common-project-directory-structure" class="section level4">
 <h4>Common project directory structure</h4>
 <p>When working across multiple projects, it can be helpful if each
@@ -405,17 +436,22 @@ Collin was working in an academic setting, he had a <a href="https://gist.github
 snippet</a> that he ran whenever starting a new project, which created
 his standardized folder structure and auto-populated a few key template
 files. We could think about writing something similar.</p>
-<p>Draft file structure?</p>
+<p>Draft file structure? <em>CBE: slightly updated. I like to keep the
+raw data in a separate folder from where cleaned / intermediate data
+files live.</em></p>
 <pre><code>project_folder
 ├── scripts
-│   ├── data_clean.R
+│   ├── data_clean.R # should save to `cleaned data/`
 │   └── analysis.R
-├── data
+├── original_data
 │   ├── data.csv
 │   └── more_data.xlsx
+├── cleaned_data
+│   ├── data_cleaned.csv
 ├── figures
-├── results
 │   └── some_figure.png
+├── results
+│   └── some_spreadsheet.xlsx
 ├── .gitignore
 └── project_folder.Rproj</code></pre>
 </div>
@@ -450,13 +486,55 @@ reports.</li>
 <div id="r-practices" class="section level2">
 <h2>R Practices</h2>
 <ul>
-<li>Ensure that your code is reproducible by never saving / loading the
-environment. Scripts should include code to read in relevant files, and
-can save key objects for re-use later. In Rstudio, go to
+<li><p>Ensure that your code is reproducible by never saving / loading
+the environment. Scripts should include code to read in relevant files,
+and can save key objects for re-use later. In Rstudio, go to
 <code>Tools &gt; Global Options</code> and in the <code>General</code>
 section, make sure that “Restore .Rdata into workspace on startup” is
-NOT checked, and make sure that “Save worskpace to .Rdata on exit:”
-dropdown is set to “Never”</li>
+NOT checked, and make sure that “Save workspace to .Rdata on exit:”
+dropdown is set to “Never”</p></li>
+<li><p>Code that is meant to be shared should not include a hard-coded
+setwd() or file paths based on the local machine directory structure.
+Function calls that require file paths should be relative, such that
+someone with a copy of the project directory can run the script without
+needing to change those file paths.</p></li>
+<li><p>Ensure that figure titles are correct. When copy-pasting
+figure-generation code to make comparable figures for different parts of
+the data (e.g., different stocks or different fisheries), it’s easy to
+accidentally leave old titles in place, leading to confusion. Consider
+using <code>paste()</code> or <code>glue()</code> with variable names or
+even r functions so that the figure title auto-updates
+appropriately.</p></li>
+</ul>
+<pre class="r"><code>## &quot;fragile&quot; version of plotting an mtcar variable; copy-pasting and plotting a second variable requires careful updating of ggtitle()
+dat.plot &lt;- data |&gt; 
+    filter(fishery_title == &quot;NT Area 10 Sport&quot;)
+ggplot(dat.plot, aes(x = stock, y = AEQ))+
+   geom_col()+
+   ggtitle(&quot;Chinook AEQ of NT Area 10 Sport&quot;)+
+   coord_flip()
+   
+## robust version:
+fishery_plot &lt;- &quot;NT Area 10 Sport&quot; ## define the fishery to plot in one place at the top
+dat.plot &lt;- data |&gt; 
+    filter(fishery_title == fishery_plot) ## use variable in our filter function 
+ggplot(dat.plot, aes(x = stock, y = AEQ))+
+   geom_col()+
+   ggtitle(paste(&quot;Chinook AEQ of&quot;, fishery_plot))+ ## use paste and variable name
+   coord_flip()
+   
+## alternative robust version:
+dat.plot &lt;- data |&gt; 
+    filter(fishery_title == &quot;NT Area 10 Sport&quot;)
+ggplot(dat.plot, aes(x = stock, y = AEQ))+
+   geom_col()+
+   ggtitle(paste(&quot;Chinook AEQ of&quot;, dat.plot$fishery_title[1]))+ ## obtain the fishery name directly from dat.plot
+   coord_flip()</code></pre>
+<ul>
+<li>When loading libraries, use <code>library()</code> rather than
+<code>require()</code>. Put all library calls at the top of the script,
+so that users immediately encounter errors if they have not yet
+installed relevant libraries.</li>
 </ul>
 </div>
 <div id="style-guide" class="section level2">
@@ -540,6 +618,34 @@ document.</p>
 introduced in R 4.0. These two perform essentially the same function,
 but with different placeholders which can lead to various errors in
 scripts when mix. One pipe should be used in the document.</p>
+<p>======= The following are good general practices, but specific style
+choices are often a matter of taste. Consistency is the most important
+part – use the same style throughout your script.</p>
+<!-- i think we should allow some flexibility, and go from there, thoughts? -->
+<ul>
+<li>Snakecase for variable names. E.g.
+<code>chinook_landed_catch</code>. <em>Using separators in variable
+names makes them easier to read. Using periods as separators becomes
+ambiguous when dealing with S3 methods</em></li>
+<li>Use <code>&lt;-</code> for assignment rather than <code>=</code>.
+Always ensure there is a space before and after the assignment operator.
+<em>This helps with visually distinguishing the assignment
+<code>x &lt;- 10</code> and the test <code>x &lt; -10</code>.</em></li>
+<li>There’s not cost to spreading code across more lines. When in doubt,
+break really long / complex lines into more, shorter lines; create
+intermediate variables if necessary. When using pipes, put each pipe
+operation on its own line.</li>
+<li>We recommend using “Code &gt; Reindent Code” (select all, then
+Ctrl-I) and “Code &gt; Reformat Code” (select all, then Ctrl-shift-A) to
+make code easier to read</li>
+<li>Avoid creating variables that share names with common functions
+(e.g., use <code>x_mean = mean(x)</code> instead of
+<code>mean = mean(X)</code>, and <code>cur_plot = ggplot(...</code>
+instead of <code>plot = ggplot(...</code>).</li>
+<li>Where possible, use names instead of numbers when indexing named
+vectors, dataframes, or lists. (e.g., <code>mtcars$cyl</code> or
+<code>mtcars[, cyl]</code> rather than <code>mtcars[, 2]</code>)</li>
+</ul>
 </div>
 </div>
 </div>
@@ -588,6 +694,35 @@ function just requires including a
 layers.</li>
 </ul>
 </div>
+<div id="creating-custom-functions" class="section level2">
+<h2>Creating custom functions</h2>
+<ul>
+<li>Functions should have clear names, preferably involving a verb. This
+name should not be the same as common R functions (e.g., don’t create a
+custom plotting function and call it <code>plot</code>)</li>
+<li>functions should not rely on objects in the global environment; if
+the function needs an object, ensure that the object is an argument for
+the function.</li>
+<li>Whenever possible, avoid writing functions that rely on
+side-effects, particularly creating new variables in the global
+environment (e.g., with <code>assign()</code>). If you need a function
+to create several objects, have the function return a list of those
+objects. (Note that file manipulation is an obvious exception to the
+general aim to avoid side-effects in functions; functions can read or
+write)</li>
+<li>When writing functions to create graphics, the user has much better
+control if the function creates and returns a gglot object instead of
+directly manipulating a graphics window using base R plotting
+functions.</li>
+<li>For longer scripts, consider separating the code into multiple
+scripts and using <code>source()</code> to call them from a single main
+script. This can be especially effective for scripts that contain many
+custom function definitions – move the functions to a separate script
+that gets <code>source()</code>ed at the top of the remaining code leads
+to a primary script that is easy to read, and a companion script that is
+just the definitions of functions.</li>
+</ul>
+</div>
 <div id="version-control" class="section level2">
 <h2>Version control</h2>
 <p>When multiple people are collaborating on a project, it gets very
@@ -629,6 +764,17 @@ the .qmd file. See <code>TAMMsupport::tamm_report</code> for an example
 of this.</li>
 </ul>
 </div>
+</div>
+</div>
+<div id="appendix-help-with-implementation" class="section level1">
+<h1>Appendix: help with implementation</h1>
+<div id="project-management-1" class="section level2">
+<h2>Project management</h2>
+<ul>
+<li>link or description to starting Rprojects</li>
+<li>link or explanation for using <code>here::here()</code></li>
+<li>link or explanation for using <code>renv</code></li>
+</ul>
 </div>
 </div>
 
