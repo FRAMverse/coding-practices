@@ -4,6 +4,10 @@
 
 Our evolving coding best practices document
 
+## Todo
+ - CBE: read other R best practices docs, adapt parts that make sense to us.
+ - Populate / link directions on some of the suggestions (e.g., git, renv, etc)
+
 ## General practices
 
 For any kind of substantial work involving more than one file, use Rprojects, the `here` package, and `renv` to make scripts easily shareable. The goal is that you can zip up a folder, send it to someone else, and they can run any scripts without making any changes.
@@ -25,17 +29,22 @@ When working across multiple projects, it can be helpful if each project has a s
 
 
 Draft file structure?
+*CBE: slightly updated. I like to keep the raw data in a separate folder from where cleaned / intermediate data files live.*
+
 ```
 project_folder
 ├── scripts
-│   ├── data_clean.R
+│   ├── data_clean.R # should save to `cleaned data/`
 │   └── analysis.R
-├── data
+├── original data
 │   ├── data.csv
 │   └── more_data.xlsx
+├── cleaned data
+│   ├── data_cleaned.csv
 ├── figures
-├── results
 │   └── some_figure.png
+├── results
+│   └── some_spreadsheet.xlsx
 ├── .gitignore
 └── project_folder.Rproj
 ```
