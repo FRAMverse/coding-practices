@@ -4,6 +4,12 @@
 
 Our evolving coding best practices document
 
+## Goals
+
+The goal of these best practices is to act as a guideline to produce code and 
+analyses that are highly transparent, transferable, reproducible and approachable.
+
+
 ## General practices
 
 For any kind of substantial work involving more than one file, use Rprojects, the `here` package, and `renv` to make scripts easily shareable. The goal is that you can zip up a folder, send it to someone else, and they can run any scripts without making any changes.
@@ -67,10 +73,64 @@ con <- DBI::dbConnect(dsn='<dsn_name>')
 
 ## Style guide
 
-(Ty's plan, Collin has regrets)
+### Variable and Column Naming
 
--   Snakecase for variable names. E.g. `chinook_landed_catch`.
--   `<-` for assignment rather than `=`
+Variables and columns of dataframes should be descriptive of their contents
+while still being machine readable e.g. lacking all whitespace and special charaters. 
+
+```r
+# Good:
+mark_rate <- tibble()
+mortality.table <- read_csv('mortality_table.csv')
+
+# Bad:
+mr1.2 <- tibble()
+'Mortality Table` <- read_csv('mortality_table.csv')
+```
+Often times column names imported into R from various sources have spaces,
+special characters, capitalization, or are just bizarre. The `janitor` package's 
+`clean_names()` function is a great automated solution to cleaning up dataframe 
+names.
+
+```r
+data <- readr::read_csv(here::here('data/ugly_column_names.csv'))
+
+data |>
+  janitor::clean_names()
+```
+### Naming Conventions, Assignment Operators and Pipes
+
+#### Naming Conventions
+[Naming conventions](https://en.wikipedia.org/wiki/Naming_convention_(programming))
+are an important part of understanding code, below are some common examples:
+
+| Naming Convention    | Example           |
+| -------------------- | ----------------- | 
+| Snake Case           | big_red_dog       |
+| Screaming Snake Case | BIG_REG_DOG       |
+| Dot Case             | big.red.dog       |
+| Camel Case           | bigRedDog         |
+| Pascal Case          | BigRedDog         |
+
+Although Hadley Wickham recommends snake case for R scripting, R has no 
+official naming convention. When writing a script a naming convention
+should be chosen and be consistently used throughout the documents
+entirety.
+
+
+#### Assignment Operators
+There are a variety of assignment operators in the R scripting language,
+`<-`, `=`, `<<-` as well as their directional reversals. The vast majority
+of assignments will either be `<-` or `=`, although essentially the same one
+should be chosen throughout the entire document.
+
+#### Pipes
+
+The original pipe `%>%` is a function of the `magittr` package. The 'native pipe'
+`|>` was introduced in R 4.0. These two perform essentially the same function,
+but with different placeholders which can lead to various errors in scripts
+when mix. One pipe should be used in the document.
+
 
 ## Visualization
 
