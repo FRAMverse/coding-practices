@@ -356,19 +356,17 @@ display: none;
 <h1>coding-practices</h1>
 <p>(<a href="https://framverse.github.io/coding-practices/" class="uri">https://framverse.github.io/coding-practices/</a>)</p>
 <p>Our evolving coding best practices document</p>
-<div id="goals" class="section level2">
-<h2>Goals</h2>
+</div>
+<div id="goals" class="section level1">
+<h1>Goals</h1>
 <p>The goal of these best practices is to act as a guideline to produce
 code and analyses that are highly transparent, transferable,
 reproducible and approachable.</p>
-</div>
-<div id="general-practices" class="section level2">
-<h2>General practices</h2>
+<!-- ## General practices -->
 <!-- Todo:
  - CBE: read other R best practices docs, adapt parts that make sense to us.
  - Populate / link directions on some of the suggestions (e.g., git, renv, etc)
 -->
-</div>
 </div>
 <div id="best-practices" class="section level1">
 <h1>Best practices</h1>
@@ -424,6 +422,42 @@ with those variables (e.g., <code>connect_fram_db(file_use)</code> and
 This makes it very easy to re-use for a different case – simply update
 the lines defining <code>file_use</code> and
 <code>fishery_use</code>.</p>
+<div id="starting-an-r-project" class="section level3">
+<h3>Starting an R project</h3>
+</div>
+<div id="here-package" class="section level3">
+<h3><code>here</code> package</h3>
+<p>The <a href="https://here.r-lib.org/">here</a> package has similar
+functionality to base R’s <code>setwd</code> and <code>getwd</code>
+functions. The real benefits of the <code>here</code> package,
+particularly the <code>here::here()</code> function, is to easily enable
+project-oriented workflows that are easily shared.
+<code>here::here()</code> when used properly with a project structure
+similar to the one outlined in this document allows for easier file path
+referencing in code along with the elimination of file path fiddling for
+someone receiving the project.</p>
+<p>Example:</p>
+<pre class="r"><code># Good
+data &lt;- read_csv(here::here(&#39;original_data/data.csv&#39;))
+
+# Bad
+data &lt;- read_csv(&#39;C:/Users/blah/Desktop/my_r_project/original_data.csv&#39;)</code></pre>
+</div>
+<div id="using-renv" class="section level3">
+<h3>Using <code>renv</code></h3>
+<ul>
+<li>Where to get it</li>
+<li>What it does</li>
+<li>Why you would want to use it</li>
+</ul>
+</div>
+<div id="sharing-an-r-project" class="section level3">
+<h3>Sharing an R project</h3>
+<ul>
+<li>Bundling / zipping the project to be shared</li>
+<li>Why <code>here</code> and <code>renv</code> are important on the
+receiving end</li>
+</ul>
 <div id="common-project-directory-structure" class="section level4">
 <h4>Common project directory structure</h4>
 <p>When working across multiple projects, it can be helpful if each
@@ -441,7 +475,7 @@ raw data in a separate folder from where cleaned / intermediate data
 files live.</em></p>
 <pre><code>project_folder
 ├── scripts
-│   ├── data_clean.R # should save to `cleaned data/`
+│   ├── data_clean.R # should save to `cleaned_data/`
 │   └── analysis.R
 ├── original_data
 │   ├── data.csv
@@ -481,6 +515,7 @@ behaves differently when being compiled for a report than when its being
 run interactively. This can be useful when developing parameterized
 reports.</li>
 </ul>
+</div>
 </div>
 </div>
 <div id="r-practices" class="section level2">
@@ -550,7 +585,7 @@ mortality.table &lt;- read_csv(&#39;mortality_table.csv&#39;)
 
 # Bad:
 mr1.2 &lt;- tibble()
-&#39;Mortality Table` &lt;- read_csv(&#39;mortality_table.csv&#39;)</code></pre>
+`Mortality Table` &lt;- read_csv(&#39;mortality_table.csv&#39;)</code></pre>
 <p>Often times column names imported into R from various sources have
 spaces, special characters, capitalization, or are just bizarre. The
 <code>janitor</code> package’s <code>clean_names()</code> function is a
@@ -606,10 +641,10 @@ entirety.</p>
 <h4>Assignment Operators</h4>
 <p>There are a variety of assignment operators in the R scripting
 language, <code>&lt;-</code>, <code>=</code>, <code>&lt;&lt;-</code> as
-well as their directional reversals. The vast majority of assignments
-will either be <code>&lt;-</code> or <code>=</code>, although
-essentially the same one should be chosen throughout the entire
-document.</p>
+well as their directional reversals. The vast majority of your
+assignments will either be <code>&lt;-</code> or <code>=</code>,
+although essentially equal, one should be chosen and used exclusively
+throughout the project.</p>
 </div>
 <div id="pipes" class="section level4">
 <h4>Pipes</h4>
@@ -618,34 +653,20 @@ document.</p>
 introduced in R 4.0. These two perform essentially the same function,
 but with different placeholders which can lead to various errors in
 scripts when mix. One pipe should be used in the document.</p>
-<p>======= The following are good general practices, but specific style
-choices are often a matter of taste. Consistency is the most important
-part – use the same style throughout your script.</p>
 <!-- i think we should allow some flexibility, and go from there, thoughts? -->
-<ul>
-<li>Snakecase for variable names. E.g.
-<code>chinook_landed_catch</code>. <em>Using separators in variable
-names makes them easier to read. Using periods as separators becomes
-ambiguous when dealing with S3 methods</em></li>
-<li>Use <code>&lt;-</code> for assignment rather than <code>=</code>.
-Always ensure there is a space before and after the assignment operator.
-<em>This helps with visually distinguishing the assignment
-<code>x &lt;- 10</code> and the test <code>x &lt; -10</code>.</em></li>
-<li>There’s not cost to spreading code across more lines. When in doubt,
-break really long / complex lines into more, shorter lines; create
-intermediate variables if necessary. When using pipes, put each pipe
-operation on its own line.</li>
-<li>We recommend using “Code &gt; Reindent Code” (select all, then
-Ctrl-I) and “Code &gt; Reformat Code” (select all, then Ctrl-shift-A) to
-make code easier to read</li>
-<li>Avoid creating variables that share names with common functions
-(e.g., use <code>x_mean = mean(x)</code> instead of
-<code>mean = mean(X)</code>, and <code>cur_plot = ggplot(...</code>
-instead of <code>plot = ggplot(...</code>).</li>
-<li>Where possible, use names instead of numbers when indexing named
-vectors, dataframes, or lists. (e.g., <code>mtcars$cyl</code> or
-<code>mtcars[, cyl]</code> rather than <code>mtcars[, 2]</code>)</li>
-</ul>
+<!--
+=======
+The following are good general practices, but specific style choices are often a matter of taste. Consistency is the most important part -- use the same style throughout your script.
+
+
+
+-   Snakecase for variable names. E.g. `chinook_landed_catch`. *Using separators in variable names makes them easier to read. Using periods as separators becomes ambiguous when dealing with S3 methods*
+-   Use `<-` for assignment rather than `=`. Always ensure there is a space before and after the assignment operator. *This helps with visually distinguishing the assignment `x <- 10` and the test `x < -10`.*
+-   There's not cost to spreading code across more lines. When in doubt, break really long / complex lines into more, shorter lines; create intermediate variables if necessary. When using pipes, put each pipe operation on its own line.
+-   We recommend using "Code > Reindent Code" (select all, then Ctrl-I) and "Code > Reformat Code" (select all, then Ctrl-shift-A) to make code easier to read
+-   Avoid creating variables that share names with common functions (e.g., use `x_mean = mean(x)` instead of `mean = mean(X)`, and `cur_plot = ggplot(...` instead of  `plot = ggplot(...`).
+-   Where possible, use names instead of numbers when indexing named vectors, dataframes, or lists. (e.g., `mtcars$cyl` or `mtcars[, cyl]` rather than `mtcars[, 2]`)
+-->
 </div>
 </div>
 </div>
@@ -768,14 +789,6 @@ of this.</li>
 </div>
 <div id="appendix-help-with-implementation" class="section level1">
 <h1>Appendix: help with implementation</h1>
-<div id="project-management-1" class="section level2">
-<h2>Project management</h2>
-<ul>
-<li>link or description to starting Rprojects</li>
-<li>link or explanation for using <code>here::here()</code></li>
-<li>link or explanation for using <code>renv</code></li>
-</ul>
-</div>
 </div>
 
 
