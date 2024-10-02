@@ -82,6 +82,8 @@ con <- DBI::dbConnect(dsn='<dsn_name>')
 
 ## R Practices
 
+- for maximum compatibility, use dashes rather than spaces or underscores in file names. $\LaTeX$, which is sometimes used as a part of Rmarkdown and Quarto documents, does not like spaces or underscores. This is most relevant when creating image files that may be loaded into reports. 
+
 - Ensure that your code is reproducible by never saving / loading the environment. Scripts should include code to read in relevant files, and can save key objects for re-use later. In Rstudio, go to `Tools > Global Options` and in the `General` section, make sure that "Restore .Rdata into workspace on startup" is NOT checked, and make sure that "Save workspace to .Rdata on exit:" dropdown is set to "Never"
 
 - Code that is meant to be shared should not include a hard-coded setwd() or file paths based on the local machine directory structure. Function calls that require file paths should be relative, such that someone with a copy of the project directory can run the script without needing to change those file paths.
