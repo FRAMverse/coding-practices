@@ -4,9 +4,19 @@
 
 Our evolving coding best practices document
 
-## Todo
+
+# Goals
+
+The goal of these best practices is to act as a guideline to produce code and 
+analyses that are highly transparent, transferable, reproducible and approachable.
+
+
+<!-- ## General practices -->
+
+<!-- Todo:
  - CBE: read other R best practices docs, adapt parts that make sense to us.
  - Populate / link directions on some of the suggestions (e.g., git, renv, etc)
+-->
 
 # Best practices
 
@@ -17,6 +27,7 @@ Good coding practices make collaboration easier and faster, and reduce the frequ
 Below, we outline best practices organized into related topics. When it can be done succinctly, we provide explanations for *why* the practices save time. After the guidelines, we include some short tutorials and examples to show *how* to implement some of the less obvious practices.
 
 ## Project management
+
 
 For any kind of substantial work involving more than one file, use Rprojects, the `here` package, and `renv` to make scripts easily shareable. The goal is that you can zip up a folder, send it to someone else, and they can run any scripts without making any changes.
 
@@ -33,6 +44,58 @@ fishery_use = 19
 
 and then replace any hard-coded uses of the filename and fishery ID with those variables (e.g., `connect_fram_db(file_use)` and `data |> select(fishery_id == fishery_use) |> ...`). This makes it very easy to re-use for a different case -- simply update the lines defining `file_use` and `fishery_use`.
 
+### Starting an R project 
+### `here` package
+The [here](https://here.r-lib.org/) package has similar functionality to base
+R's `setwd` and `getwd` functions. The real benefits of the `here` package,
+particularly the `here::here()` function, is to easily enable project-oriented
+workflows that are easily shared. `here::here()` when used properly with a project
+structure similar to the one outlined in this document allows for easier file path 
+referencing in code along with the elimination of file path fiddling for someone
+receiving the project.
+
+Example:
+```r
+# Good
+data <- read_csv(here::here('original_data/data.csv'))
+
+# Bad
+data <- read_csv('C:/Users/blah/Desktop/my_r_project/original_data.csv')
+```
+
+### Using `renv`
+
+- Where to get it
+- What it does
+- Why you would want to use it
+
+### Sharing an R project
+
+- Bundling / zipping the project to be shared
+- Why `here` and `renv` are important on the receiving end
+
+
+#### Outside WDFW
+Various collaborators have completely independent IT departments with their
+own rules around the types and sizes of files they can receive through email.
+
+Common reasons for blocked emails:
+
+- `.html` and `.zip` files
+- Size of the file too large
+
+Most of the time these restrictions can be worked around via using a 3rd party
+to host the file like an AWS S3 bucket or Google Drive. Due to the sensitive 
+nature of some of the data being shared, the file should be deleted from the
+3rd party when the receipt is verified. 
+
+When `.zip` files are blacklisted by the recipient's IT department, an
+alternative would be the `.7z` format from the [7-zip](https://www.7-zip.org/)
+software.
+
+
+
+
 #### Common project directory structure
 
 When working across multiple projects, it can be helpful if each project has a similar file structure. Ty and Collin will discuss what that should be, but good foundation is Ty's approach, which has a `data/` and a `scripts/` subfolder. It may be helpful to also include a standardized readme with basic information (when project was started, what goal was, who was working on it). When Collin was working in an academic setting, he had a [code snippet](https://gist.github.com/cbedwards/7e64215e062c42da54dbd01626ef6a72) that he ran whenever starting a new project, which created his standardized folder structure and auto-populated a few key template files. We could think about writing something similar.
@@ -44,12 +107,12 @@ Draft file structure?
 ```
 project_folder
 ├── scripts
-│   ├── data_clean.R # should save to `cleaned data/`
+│   ├── data_clean.R # should save to `cleaned_data/`
 │   └── analysis.R
-├── original data
+├── original_data
 │   ├── data.csv
 │   └── more_data.xlsx
-├── cleaned data
+├── cleaned_data
 │   ├── data_cleaned.csv
 ├── figures
 │   └── some_figure.png
@@ -121,7 +184,72 @@ ggplot(dat.plot, aes(x = stock, y = AEQ))+
 
 ## Style guide
 
+### Variable and Column Naming
+
+Variables and columns of dataframes should be descriptive of their contents
+while still being machine readable e.g. lacking all whitespace and special charaters. 
+
+```r
+# Good:
+mark_rate <- tibble()
+mortality.table <- read_csv('mortality_table.csv')
+
+# Bad:
+mr1.2 <- tibble()
+`Mortality Table` <- read_csv('mortality_table.csv')
+```
+Often times column names imported into R from various sources have spaces,
+special characters, capitalization, or are just bizarre. The `janitor` package's 
+`clean_names()` function is a great automated solution to cleaning up dataframe 
+names.
+
+```r
+data <- readr::read_csv(here::here('data/ugly_column_names.csv'))
+
+data |>
+  janitor::clean_names()
+```
+### Naming Conventions, Assignment Operators and Pipes
+
+#### Naming Conventions
+[Naming conventions](https://en.wikipedia.org/wiki/Naming_convention_(programming))
+are an important part of understanding code, below are some common examples:
+
+| Naming Convention    | Example           |
+| -------------------- | ----------------- | 
+| Snake Case           | big_red_dog       |
+| Screaming Snake Case | BIG_REG_DOG       |
+| Dot Case             | big.red.dog       |
+| Camel Case           | bigRedDog         |
+| Pascal Case          | BigRedDog         |
+
+Although Hadley Wickham recommends snake case for R scripting, R has no 
+official naming convention. When writing a script a naming convention
+should be chosen and be consistently used throughout the documents
+entirety.
+
+
+#### Assignment Operators
+There are a variety of assignment operators in the R scripting language,
+`<-`, `=`, `<<-` as well as their directional reversals. The vast majority
+of your assignments will either be `<-` or `=`, although essentially equal,
+one should be chosen and used exclusively throughout the project.
+
+#### Pipes
+
+The original pipe `%>%` is a function of the `magittr` package. The 'native pipe'
+`|>` was introduced in R 4.0. These two perform essentially the same function,
+but with different placeholders which can lead to various errors in scripts
+when mix. One pipe should be used in the document.
+
+
+
+<!-- i think we should allow some flexibility, and go from there, thoughts? -->
+<!--
+=======
 The following are good general practices, but specific style choices are often a matter of taste. Consistency is the most important part -- use the same style throughout your script.
+
+
 
 -   Snakecase for variable names. E.g. `chinook_landed_catch`. *Using separators in variable names makes them easier to read. Using periods as separators becomes ambiguous when dealing with S3 methods*
 -   Use `<-` for assignment rather than `=`. Always ensure there is a space before and after the assignment operator. *This helps with visually distinguishing the assignment `x <- 10` and the test `x < -10`.*
@@ -129,6 +257,7 @@ The following are good general practices, but specific style choices are often a
 -   We recommend using "Code > Reindent Code" (select all, then Ctrl-I) and "Code > Reformat Code" (select all, then Ctrl-shift-A) to make code easier to read
 -   Avoid creating variables that share names with common functions (e.g., use `x_mean = mean(x)` instead of `mean = mean(X)`, and `cur_plot = ggplot(...` instead of  `plot = ggplot(...`).
 -   Where possible, use names instead of numbers when indexing named vectors, dataframes, or lists. (e.g., `mtcars$cyl` or `mtcars[, cyl]` rather than `mtcars[, 2]`)
+-->
 
 ## Visualization
 
@@ -177,9 +306,5 @@ When multiple people are collaborating on a project, it gets very important to b
 
 # Appendix: help with implementation
 
-## Project management
 
-- link or description to starting Rprojects
-- link or explanation for using `here::here()`
-- link or explanation for using `renv`
 
