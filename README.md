@@ -75,6 +75,27 @@ data <- read_csv('C:/Users/blah/Desktop/my_r_project/original_data.csv')
 - Why `here` and `renv` are important on the receiving end
 
 
+#### Outside WDFW
+Various collaborators have completely independent IT departments with their
+own rules around the types and sizes of files they can receive through email.
+
+Common reasons for blocked emails:
+
+- `.html` and `.zip` files
+- Size of the file too large
+
+Most of the time these restrictions can be worked around via using a 3rd party
+to host the file like an AWS S3 bucket or Google Drive. Due to the sensitive 
+nature of some of the data being shared, the file should be deleted from the
+3rd party when the receipt is verified. 
+
+When `.zip` files are blacklisted by the recipient's IT department, an
+alternative would be the `.7z` format from the [7-zip](https://www.7-zip.org/)
+software.
+
+
+
+
 #### Common project directory structure
 
 When working across multiple projects, it can be helpful if each project has a similar file structure. Ty and Collin will discuss what that should be, but good foundation is Ty's approach, which has a `data/` and a `scripts/` subfolder. It may be helpful to also include a standardized readme with basic information (when project was started, what goal was, who was working on it). When Collin was working in an academic setting, he had a [code snippet](https://gist.github.com/cbedwards/7e64215e062c42da54dbd01626ef6a72) that he ran whenever starting a new project, which created his standardized folder structure and auto-populated a few key template files. We could think about writing something similar.

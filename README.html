@@ -458,6 +458,24 @@ data &lt;- read_csv(&#39;C:/Users/blah/Desktop/my_r_project/original_data.csv&#3
 <li>Why <code>here</code> and <code>renv</code> are important on the
 receiving end</li>
 </ul>
+<div id="outside-wdfw" class="section level4">
+<h4>Outside WDFW</h4>
+<p>Various collaborators have completely independent IT departments with
+their own rules around the types and sizes of files they can receive
+through email.</p>
+<p>Common reasons for blocked emails:</p>
+<ul>
+<li><code>.html</code> and <code>.zip</code> files</li>
+<li>Size of the file too large</li>
+</ul>
+<p>Most of the time these restrictions can be worked around via using a
+3rd party to host the file like an AWS S3 bucket or Google Drive. Due to
+the sensitive nature of some of the data being shared, the file should
+be deleted from the 3rd party when the receipt is verified.</p>
+<p>When <code>.zip</code> files are blacklisted by the recipient’s IT
+department, an alternative would be the <code>.7z</code> format from the
+<a href="https://www.7-zip.org/">7-zip</a> software.</p>
+</div>
 <div id="common-project-directory-structure" class="section level4">
 <h4>Common project directory structure</h4>
 <p>When working across multiple projects, it can be helpful if each
