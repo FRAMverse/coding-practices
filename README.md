@@ -26,8 +26,17 @@ Good coding practices make collaboration easier and faster, and reduce the frequ
 
 Below, we outline best practices organized into related topics. When it can be done succinctly, we provide explanations for *why* the practices save time. After the guidelines, we include some short tutorials and examples to show *how* to implement some of the less obvious practices.
 
-## Project management
+## Non-coding
 
+The following are important for coding and non-coding projects alike.
+
+- When sharing files via email it's useful to have a consistent, informative version naming scheme. We recommend `filename_date_editorintials`.
+- We encounter many issues when incorporating spreadsheet content into programming pipelines. Some of this stems from the difference between what is easily human-readable and what is easily machine-readable, and sometimes it may be appropriate to make the spreadsheets as human-readable as possible. However, some practices can make spreadsheets more machine-readable without affecting human readability. 
+    - Ensure that headers are consistent in different files that are meant to be combined. This includes capitalization and the use of spaces. Copy-pasting from a template file is a good way to ensure exactly identical headers in this case.
+    - Ensure that categories have a consistent name in a given column. For example, we have encountered data sheets with a "Yes/No" type column in which "Yes" is a mix of "Y", "Yes", "yes", "yes ", and "yees". When read into R or another language, these will be treated as five different categories instead of one. Consider using data validation in Excel to constrain user inputs to intended values. This can also be used to ensure that fields that should contain numbers do not end up with character strings.
+    - For more suggestions on good spreadsheet practices, see [Broman and Woo 2018](https://doi.org/10.1080/00031305.2017.1375989)
+
+## Project management
 
 For any kind of substantial work involving more than one file, use Rprojects, the `here` package, and `renv` to make scripts easily shareable. The goal is that you can zip up a folder, send it to someone else, and they can run any scripts without making any changes.
 
