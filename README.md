@@ -34,6 +34,30 @@ The following are important for coding and non-coding projects alike.
     - Ensure that headers are consistent in different files that are meant to be combined. This includes capitalization and the use of spaces. Copy-pasting from a template file is a good way to ensure exactly identical headers in this case.
     - Ensure that categories have a consistent name in a given column. For example, we have encountered data sheets with a "Yes/No" type column in which "Yes" is a mix of "Y", "Yes", "yes", "yes ", and "yees". When read into R or another language, these will be treated as five different categories instead of one. Consider using data validation in Excel to constrain user inputs to intended values. This can also be used to ensure that fields that should contain numbers do not end up with character strings.
     - For more suggestions on good spreadsheet practices, see [Broman and Woo 2018](https://doi.org/10.1080/00031305.2017.1375989)
+    
+## Data Sharing Guidance
+Sharing what type of data and who it can be shared with is often confusing.
+Generally sport data can be shared with everyone freely, while commercial data
+has restrictions on who and *how* the data can be shared, for example under the
+Magnuson-Stevens Act (MSA)
+
+### Sport
+Sport data can usually freely shared to the public, although there might be
+restrictions around sharing charter fishing data via the MSA.
+
+### Commerical
+The MSA has to be considered when sharing commercial data, often the data has
+to be aggregated in way to not specifically identify fishers. In the co-management
+realm this is rarely and issue as much of the data is aggregated, but for sharing
+with the pubic guidance should be requested through WDFWs Records Office.
+
+### Treaty
+Public requests for treaty data should be directed to the individual tribes
+themselves or WDFW's Records Office. Tribal data can be shared freely with the 
+data's respective tribe, sharing one tribes data with another tribe should be 
+done under caution with the guidance of NWIFC staff.
+
+
 
 ## Project management
 
