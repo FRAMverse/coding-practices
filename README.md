@@ -52,6 +52,20 @@ fishery_use = 19
 
 and then replace any hard-coded uses of the filename and fishery ID with those variables (e.g., `connect_fram_db(file_use)` and `data |> select(fishery_id == fishery_use) |> ...`). This makes it very easy to re-use for a different case -- simply update the lines defining `file_use` and `fishery_use`.
 
+#### Help I've been given a project that uses `{renv}`!
+
+If someone has shared an Rproject that uses `{renv}`, you may find that it tells you that you don't have the appropriate packages installed,
+and trying to install them the normal way may not work. Don't panic. `{renv}` handles packages separately, in a way that makes sure that you have exactly the same
+version installed as whoever made the project. (The motivation for this is that packages can change over time, and sometimes functions will change how they work; if that's happened, code written for older versions of the package won't work as intended when using newer versions of the packages). 
+
+To handle package installation for an Rproject using `{renv}`
+
+- first, make sure that you have installed the `{renv}` package on your computer
+- Second, run `renv::restore()` in the console. This will initiate the package installation process, which will ask for confirmation before installing. Once you accept, `{renv}` will then install the exact versions of the packages used by the project and associate those versions with the project. You should be good to go!
+
+If you are working in the project and use previously unused packages (e.g., you add a `library()` call for a new package), you should use `renv::snapshot()` to update the `{renv}` system with the new package(s). That way when you share the project with someone else, your additional packages will be installed with `renv::restore()`.
+
+
 ### Starting an R project 
 
 ### `here` package
