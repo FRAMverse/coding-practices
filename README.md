@@ -111,12 +111,6 @@ data <- read_csv(here::here('original_data/data.csv'))
 data <- read_csv('C:/Users/blah/Desktop/my_r_project/original_data.csv')
 ```
 
-### Using `renv`
-
-- Where to get it
-- What it does
-- Why you would want to use it
-
 ### Sharing an R project
 
 - Bundling / zipping the project to be shared
@@ -338,14 +332,11 @@ Setting up Git and linking it to Rstudio is an involved task, and we recommend [
 
 ### Getting started
 
-At its simplest, git is a way to keep track of changes, and merge different, non-conflicting changes to the same documents. In this sense, you can think of it as a mix between dropbox and a Google document, but with more to learn but a lot more control and functionality. We recommend Chapter 20 of Happy Git with R for an overview. For simple tasks (e.g., working on your own project), a standard workflow is to pull (this makes sure your local version of the repository is up to date), and work in the repo. At good stopping points or key checkpoints in your work (you completed a specific task, or are stopping work on this project for the day), add any new files that were created, commit the repository, pull the remote to make sure you are up to date, and then push. See "Using git in Rstudio" for the terminal commands for this workflow.
-
-
-
+At its simplest, git is a way to keep track of changes and merge different, non-conflicting changes to the same documents. In this sense, you can think of it as a mix between dropbox and a Google document, but with more to learn but a lot more control and functionality. We recommend Chapter 20 of Happy Git with R for an overview. For simple tasks (e.g., working on your own project), a standard workflow is to pull (this makes sure your local version of the repository is up to date), and work in the repo. At good stopping points or key checkpoints in your work (you completed a specific task, or are stopping work on this project for the day), add any new files that were created, commit the repository, pull the remote to make sure you are up to date, and then push. See "Using git in Rstudio" for the terminal commands for this workflow.
 
 ### Using git in Rstudio
 
-Once an Rproject is linked to a git repository, Rstudio will have a git button in the top menu (near the "go to file/function" field). Clicking this button, then "Commit" opens up an interface to create and control a git commit, then push it to the remote repo. However, often this interface is very slow/laggy when a project has many files. An alternative is to manage the commit in the "terminal" tab of the console window. Here you can type git commands, which are typically much faster for Rstudio to enact. Here is a typical commit process in the terminal, with explanations for each step.
+Once an Rproject is linked to a git repository, Rstudio will have a git button in the top menu (near the "go to file/function" field). Clicking this button, then "Commit" opens up an interface to create and control a git commit, then push it to the remote repo. However, often this interface is very slow/laggy when a project has many files. An alternative that's still in Rstudio is to manage the commit in the "terminal" tab of the console window. Here you can type git commands, which are typically much faster for Rstudio to enact. Here is a typical commit process in the terminal, with explanations for each step.
 
 `git add -A`
 This adds any new files to tracking (ignoring files that are covered in `.gitignore`), so that they are included in the commit.
@@ -356,16 +347,90 @@ This updates your local version with the remote version, in case someone else ha
 `git push`
 This updates the remote version with your commit and its associated changes.
 
-### Branching, forking, pull requests
+### Collaborating with git: Branching, forking, pull requests
 
-*Populate with links, basics of the work flow*
-- branching and pull requests
-- forking and pull requests
-- Adapt git use example from BDS coding practices.
+Git is especially useful for collaborating. One of our most common uses is when we have
+an existing, functional repository that we want to modify -- for example, one of our team's R packages. If I want to add
+a new function or debug some code, I probably don't want to modify the version of the repository that everyone 
+else is using. The solution is to use "branches". Github can track multiple, parallel versions of everything in the repository; each of these versions are 
+called *branches*. 
 
+The default version of the code and files is on a primary branch, typically labeled "main" or sometimes "master". When working on adding new material or changing things, we can start by creating a new branch that serves as a separate sandbox to develop code, debug things, and just generally
+muck about without affecting the version of the code that everyone else is. Once we have some polished 
+changes that are ready for prime time, we can merge them in to the main branch, typically with a "pull request".
 
+A *pull request* is a formal step (made very easy on github) in which you can describe the changes you've made, and others can look at 
+the changes to the actual code and provide feedback before the code is integrated into the main branch. For your own projects,
+you can often merge changes without using a pull request. However, for collaborative projects, using a pull request is very valuable.
+In addition to allowing collaborators to see and comment on your new changes, it provides a record of the changes that have been made in the past.
+For example, see the closed pull requests on the framrsquared package [here](https://github.com/FRAMverse/framrsquared/pulls?q=is%3Aclosed). Once
+a pull request has been accepted and the branch has been merged into main, the branch can safely be deleted. Note that since git keeps track of
+all branches in parallel, you can switch between branches immediately, either to remind yourself of how the "main" branch works, or to see what 
+someone else has been working on. This can be done in the terminal with `git checkout branchname` where "branchname" is
+the name of the branch in question.
 
-### git switch
+What if you want to make your own version of a popular package or explore / work on the repository of someone you don't know? You can
+only create branches on repositories that you have some permissions to. If you don't have those, you can instead create a "fork"
+of the repository. This is a totally separate repository that you own (and so you control all the permissions to),
+which starts as a copy of the original repository you forked. You can continue to merge in any changes from the
+original repository, but your changes don't automatically get updated to the original repository (even in a separate branch).
+You can, however, make a pull request for the original repository, which shows the changes you've made to 
+the folks in charge of the original repository, and they can discuss those changes and potentially
+merge them into their version of the repository. 
+
+For collaborations within the FRAM team, WDFW, and/or with the tribes, we general expect everyone to be
+included in the original repository, so our usual workflow will use branches. However, if someone who
+was not a formal part of collaborations wanted to take a look at what we were doing and offer
+their modifications, the best path for that would be through forking.
+
+#### Example branching workflow
+
+1. With a specific change in mind, start a new branch with a relevant label, and "checkout" that branch.
+Through the Rstudio terminal, the most efficient way to do that is with `git checkout -b add/initialize_function`,
+where "add/initialize_function" is the name of the new branch (in this case, one that I'm creating to add an initialize function).
+`git checkout -b` both creates the new branch (just like `git branch` does) AND checks out that branch. 
+
+2. Make changes on the new branch. This could be a quick task with a single commit or two, or this could be weeks or months of work with many commits. 
+This branching workflow works either way. The first time you go to push your new branch, you will need to add the new branch to the github repository.
+In the terminal, the command for that will look like
+
+`git push --set-upstream origin add/initialize_function`
+
+This might look intimidating, but git will give you a helpful note if you just try to push with `git push` before doing this process, which spells out the exact code to use.
+
+3. When you want others to look over your changes and potentially merge them into the main branch, make a pull request. You can do this
+on github -- there's often a button for "make pull request" when a new branch has been updated, but you can 
+also get there from the "Pull requests" tab. In the pull request, you can provide the explanation of what you did and why,
+and draw attention to specific areas of concerns or questions you have. The pull request will
+automatically show the changes to text-based files (like .R files), highlighting what has
+been removed and added. Once the pull request is made, you and others can have a conversation via comments,
+and you can make additional changes to your branch to address comments (make sure to commit 
+those changes, though!).
+
+4. Once there's consensus on the pull request, the repo maintainer can hit the "merge"
+button, and all the changes from your branch will get integrated into the main branch. At this point
+your branch is superfluous, and can be deleted.
+
+#### Github "issues"
+
+One of our favorite features of Github is the "Issues" tab of a repository.
+Here anyone with a github account can start an *Issue*, which is a distinct conversation about
+some problem or desired feature for a repository. Once the issue is started, users can have a conversation by
+posting comments to the issue, clarifying the concern or providing examples for which the code breaks.
+
+On its own, this may not sound much different from sending an email to the repository owner. However,
+(a) this is visible for anyone, so others can see (and join) the conversation, and (b)
+Github integrates commit and merge information into the issue thread. This makes it easy to 
+track the process from "someone found a problem" to "someone solved the problem" (
+and by looking at the details of the commits, you can see exactly *how* they solved the problem).
+For an example of that, see the closed issues for this repository [here](https://github.com/FRAMverse/coding-practices/issues?q=is%3Aissue+is%3Aclosed).
+In the closed issues, Stephanie Thurner suggested some additional content, Tyler Garber and Collin Edwards and Steph had
+some back-and-forth to clarify and brainstorm the content, Ty or Collin added content with a new commit and then closed the issue.
+
+For the WDFW FRAM team in particular, by working through code problems
+using Github issues we provide complete transparent when discussing and addressing problems with our work.
+
+#### git switch
 
 If you have started making changes to a git repository and realize before committing the changes that your work should really be on a new branch, you can use the following git commands to achieve this:
 
@@ -387,6 +452,7 @@ where "newbranchname" is replaced by an appropriate name for your new branch.
 #### Other tips
 
 - The optional `inst/` folder of a package can hold misc files which are consistently accessible from the package functions. This allows us to develop packages to automate reporting -- we have a .qmd file in the `inst/` folder, and then a package in the function can copy that .qmd file to an appropriate folder (based on arguments), compile an html or pdf from the .qmd file, and then delete the .qmd file. See `TAMMsupport::tamm_report` for an example of this.
+- You can set Rstudio to always run document() before check(). This can be done with Build > Configure Build Tools > Build Tools. Check the "Generate documentation with Roxygen" box, and then click the "configure" button and make sure that the box is checked for "Automatically roxygenize when running RCMD check".
 
 # Appendix: help with implementation
 
