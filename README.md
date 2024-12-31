@@ -465,6 +465,7 @@ where "newbranchname" is replaced by an appropriate name for your new branch.
 
 - The optional `inst/` folder of a package can hold misc files which are consistently accessible from the package functions. This allows us to develop packages to automate reporting -- we have a .qmd file in the `inst/` folder, and then a package in the function can copy that .qmd file to an appropriate folder (based on arguments), compile an html or pdf from the .qmd file, and then delete the .qmd file. See `TAMMsupport::tamm_report` for an example of this.
 - You can set Rstudio to always run document() before check(). This can be done with Build > Configure Build Tools > Build Tools. Check the "Generate documentation with Roxygen" box, and then click the "configure" button and make sure that the box is checked for "Automatically roxygenize when running RCMD check".
+- You can set up and populate an associated package website using github pages with `usethis::use_pkgdown_github_pages()`.
 
 # Appendix: help with implementation
 
