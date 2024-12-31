@@ -36,36 +36,36 @@ The following are important for coding and non-coding projects alike.
     - For more suggestions on good spreadsheet practices, see [Broman and Woo 2018](https://doi.org/10.1080/00031305.2017.1375989)
     
 ## Data Sharing Guidance
-Sharing what type of data and who it can be shared with is often confusing.
+Identify what type of data and who it can be shared with is often confusing.
 Generally sport data can be shared with everyone freely, while commercial data
 has restrictions on who and *how* the data can be shared, for example under the
-Magnuson-Stevens Act (MSA)
+Magnuson-Stevens Act (MSA).
 
 ### Sport
 Sport data can usually freely shared to the public, although there might be
 restrictions around sharing charter fishing data via the MSA.
 
 ### Commerical
-The MSA has to be considered when sharing commercial data, often the data has
+The MSA has to be considered when sharing commercial data; often the data has
 to be aggregated in way to not specifically identify fishers. In the co-management
-realm this is rarely and issue as much of the data is aggregated, but for sharing
-with the pubic guidance should be requested through WDFWs Records Office.
+realm this is rarely an issue as much of the data is aggregated, but for sharing
+with the pubic, guidance should be requested through WDFWs Records Office.
 
 ### Treaty
 Public requests for treaty data should be directed to the individual tribes
 themselves or WDFW's Records Office. Tribal data can be shared freely with the 
-data's respective tribe, sharing one tribes data with another tribe should be 
-done under caution with the guidance of NWIFC staff.
+data's respective tribe, but sharing one tribe's data with another tribe should only be 
+done with caution and under the guidance of NWIFC staff.
 
 
 
 ## Project management
 
-For any kind of substantial work involving more than one file, use Rprojects, the `here` package, and `renv` to make scripts easily shareable. The goal is that you can zip up a folder, send it to someone else, and they can run any scripts without making any changes.
+For any kind of substantial work involving more than one file, use Rprojects, the `here` package, and (possibly) `renv` to make scripts easily shareable (details on both below). The goal is that you can zip up a folder, send it to someone else, and they can run any scripts without making any changes. (Note: Ty and Collin are trying out `renv` -- it provides more robust sharing, but also adds an extra layer of complication for both the initial coder and anyone using it. We currently view this package as optional, while we strongly encourage using `here` withe very project).
 
 When developing a document to report results or findings to a general user, use Rmarkdown or Quarto to create a report that blends R code with explanations and graphics.
 
-When a script is likely to be re-used (e.g. not a one-off analysis) or if it is going to be shared, create a commented version with instructions on use. This should be stored somewhere accessible. Collin Edwards maintains the `snippets` [github repository](https://github.com/FRAMverse/snippets) for this kind of thing, or it could live in a Teams folder. If code is likely to be useful to the team or others, it may also be appropriate to incorporate this code into an R package, or develop a new R package for this code. Converting code to packages is much more involved that storing a code snippet or re-useable script somewhere, but makes it much easier for incorporation into other code.
+When a script is likely to be re-used (e.g. not a one-off analysis) or if it is going to be shared, create a commented version with instructions on use. This should be stored somewhere accessible. Collin Edwards maintains the `snippets` [github repository](https://github.com/FRAMverse/snippets) to store re-usable code, or the code could live in a Teams folder. If code is likely to be useful to the FRAM team or others, it may also be appropriate to incorporate this code into an R package, or develop a new R package for this code. Converting code to packages is much more involved that storing a code snippet or re-useable script somewhere, but makes it much easier for incorporation into other code. Reach out to Collin Edwards or Ty Garber if you this is something you want to explore further.
 
 To make scripts easier to re-use, replace hard-coded specifics with variables that are defined at the top of the script. For example, if Collin wrote a script to read in the Mortalities table of a FRAM database and plot the landed catch for a specific fishery, he would probably initially write that script using the file name and fishery name wherever he needed it (e.g., `connect_fram_db("FramDBExample.Mdb")` and `data |> select(fishery_id == 19) |> ...`). To make this script easier to re-use, he could add lines of code near the top of the script, with
 
@@ -74,13 +74,13 @@ file_use = "FramDBExample.Mdb"
 fishery_use = 19
 ```
 
-and then replace any hard-coded uses of the filename and fishery ID with those variables (e.g., `connect_fram_db(file_use)` and `data |> select(fishery_id == fishery_use) |> ...`). This makes it very easy to re-use for a different case -- simply update the lines defining `file_use` and `fishery_use`.
+and then replace any hard-coded uses of the filename and fishery ID with those variables (e.g., `connect_fram_db(file_use)` and `data |> select(fishery_id == fishery_use) |> ...`). This makes it very easy to re-use for a different case: simply update the lines defining `file_use` and `fishery_use`.
 
 #### Help I've been given a project that uses `{renv}`!
 
 If someone has shared an Rproject that uses `{renv}`, you may find that it tells you that you don't have the appropriate packages installed,
 and trying to install them the normal way may not work. Don't panic. `{renv}` handles packages separately, in a way that makes sure that you have exactly the same
-version installed as whoever made the project. (The motivation for this is that packages can change over time, and sometimes functions will change how they work; if that's happened, code written for older versions of the package won't work as intended when using newer versions of the packages). 
+version installed as whoever made the project. Packages can change over time, and sometimes functions will change how they work; if that has happened, code written for older versions of the package won't work as intended when using newer versions of the packages. `{renv}` solves that.
 
 To handle package installation for an Rproject using `{renv}`
 
@@ -95,20 +95,22 @@ If you are working in the project and use previously unused packages (e.g., you 
 ### `here` package
 
 The [here](https://here.r-lib.org/) package has similar functionality to base
-R's `setwd` and `getwd` functions. The real benefits of the `here` package,
-particularly the `here::here()` function, is to easily enable project-oriented
-workflows that are easily shared. `here::here()` when used properly with a project
-structure similar to the one outlined in this document allows for easier file path 
+R's `setwd` and `getwd` functions, in that it helps with file paths. The real benefits of the `here` package,
+specifically the `here::here()` function, is to easily enable project-oriented
+workflows that are easily shared. When used within an R project, `here::here()` allows for easier file path 
 referencing in code along with the elimination of file path fiddling for someone
-receiving the project.
+receiving the project. This is because `here::here()` takes filepaths using the project directory as the 
+starting point and returns the complete filepath for the current computer. So the scripts will continue to work if the project directory is moved to a different folder, drive, or computer.
 
 Example:
 ```r
 # Good
 data <- read_csv(here::here('original_data/data.csv'))
+## Works on everyone's computer
 
 # Bad
 data <- read_csv('C:/Users/blah/Desktop/my_r_project/original_data.csv')
+## only works on User "blah"'s computer, and only so long as the project stays on their desktop.
 ```
 
 ### Sharing an R project
@@ -133,7 +135,7 @@ nature of some of the data being shared, the file should be deleted from the
 
 When `.zip` files are blacklisted by the recipient's IT department, an
 alternative would be the `.7z` format from the [7-zip](https://www.7-zip.org/)
-software. Sometimes zipped files can successfully be emailed if the file name is changed to end in something else (e.g., `.zap`) and including instuctions to change the file name back.
+software. Sometimes zipped files can successfully be emailed if the file name is changed to end in something else (e.g., `.zap`); if doing so, make sure to include instuctions to change the file name back.
 
 
 #### Common project directory structure
@@ -189,12 +191,12 @@ con <- DBI::dbConnect(dsn='<dsn_name>')
 
 #### Tips
 
--   We have a [template YAML header](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/custom-yaml-header.Rmd) for quarto / rmarkdown files that includes some useful settings for readability, and gives a WDFW flavored header when combined with [this style guide](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/style.css).
+-   We have a [template YAML header](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/custom-yaml-header.Rmd) for quarto / rmarkdown files that includes some useful settings for readability, and gives a WDFW flavored header when combined with [this style guide](https://github.com/FRAMverse/snippets/blob/main/R/markdown-and-quarto/style.css). This is also added with `framrsquared::initialize_project()`
 -   using `if(interactive())` allows you to write code that behaves differently when being compiled for a report than when its being run interactively. This can be useful when developing parameterized reports, as the parameters will live in the YAML header, which is not run in interactive mode.
 
 ## R Practices
 
-- for maximum compatibility, use dashes rather than spaces or underscores in file names. $\LaTeX$, which is sometimes used as a part of Rmarkdown and Quarto documents, does not like spaces or underscores. This is most relevant when creating image files that may be loaded into reports. 
+- for maximum compatibility, use dashes rather than spaces or underscores in file names. $\LaTeX$, which is sometimes used as a part of Rmarkdown and Quarto documents, does not like spaces or underscores. This is most relevant when creating image files that may be loaded into $\LaTeX$ reports. 
 
 - Ensure that your code is reproducible by never saving / loading the environment. Scripts should include code to read in relevant files, and can save key objects for re-use later. In Rstudio, go to `Tools > Global Options` and in the `General` section, make sure that "Restore .Rdata into workspace on startup" is NOT checked, and make sure that "Save workspace to .Rdata on exit:" dropdown is set to "Never"
 
@@ -207,6 +209,8 @@ con <- DBI::dbConnect(dsn='<dsn_name>')
 - When running simulations or other code in which the outcomes of a run can differ due to randomness, it can be difficult and frustrating for others to attempt to replicate your work (or replicate an error). One key tool is to use `set.seed()` at the beginning of a script. This will ensure that the randomness is repeated exactly every time the script is run. Note that since setting the seed prevents alternative random outcomes, it is unwise to do so when developing code, as your code will only ever represent one set of random outcomes.
 
 - In rare cases, R packages will work only for 32 bit R or only for 64 bit R (historically, this was an issue for connecting to databases). Code that uses these packages will then only run on some computers, severely hampering our transparency and code sharing. Because of this, these packages should be avoided whenever reasonable. When there is no other option, there should be very clear commenting or documentation identifying this issue, so that users know immediately whether or not they will be able to run the code. If R functions exist for both 32 bit and 64 bit R but have different functions or syntax, consider supportinb both architectures by including an `if` statement; `.Machine$sizeof.pointer` will return 8 in 64-bit R, and 4 in 32-bit R. 
+
+- When sharing code publicly (like on Github) **it is important not to share filepaths that include your username** (this is a big no-no for the WDFW IT department). The `here::here()` helps write code that doesn't include full filepaths; storing github repositories outside of your documents folder (e.g., in a `C:/Repos/` directory) can help avoid this as well.
 
 
 ## Style guide
@@ -269,6 +273,14 @@ The original pipe `%>%` is a function of the `magittr` package. The 'native pipe
 but with different placeholders which can lead to various errors in scripts
 when mix. One pipe should be used in the document. In Rstudio, [ctrl][shift][m] generates a pipe; you can set which type of pipe is generated in Tools > Global Options > Code, and check/uncheck the "Use native pipe operator..." box.
 
+### Simplifying styling
+
+You can streamline consistent styling with 
+
+- `Code` > `Reformat Code` in the Rstudio menus
+- the [styler plugin](https://styler.r-lib.org/)
+
+If, like some of us, your styling is inconsistent when writing code, these tools allow you to quickly change this after the fact.
 
 ## Visualization
 
